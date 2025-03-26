@@ -1,9 +1,7 @@
 package com.moviebooking.moviebooking.util;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.asm.TypeReference;
-
+import com.fasterxml.jackson.core.type.TypeReference;
 import java.io.File;
 import java.util.Collections;
 import java.util.List;

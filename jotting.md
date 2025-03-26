@@ -26,10 +26,12 @@ Class responsibilities
 - movieBooking class - to hold the booking data
 - movieBookingService - contains the logic for the application
 - movieBookingController - exposes the app api / accept request and return response
+- movieBookingRequest - This class will be used to receive data from the client when a user makes a booking request
+- movieBookingResponse - This class will be used to send data back to the client after processing the booking request.
+- bookingException - this class with contain the exceptions that could happen during booking
 - 
 
 
-- with movieTitle, availableSeat, pricePerSeat, taxPercentagePerSeat as properties
 
 - identify the functionality the  of movieBookingRequest, movieBookingResponse
 bookingException, bookingExceptionDetail and bookingExceptionHandler class 
