@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -82,8 +83,20 @@ public class MovieBookingService {
         return myTotalRevenue;
     }
 
-    public String highestRevenue() {
+    public void highestRevenue() {
+        Optional<Map.Entry<String, Double>> maxEntry = movieBookingValue.entrySet().stream()
+                .max(Map.Entry.comparingByValue());
 
+        if (maxEntry.isPresent()) {
+            log.info("Movie that has got the highest revenue (including tax) in a single booking: {}", maxEntry.get().getKey());
+        }
+    }
+
+    public void eachMovie(){
+        dataStorage.allMovieBooking().stream()
+                .forEach(movie -> {
+
+                });
     }
 
 }
