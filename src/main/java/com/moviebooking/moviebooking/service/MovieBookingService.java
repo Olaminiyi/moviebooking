@@ -11,10 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -68,35 +65,66 @@ public class MovieBookingService {
         return dataStorage.allMovieBooking();
     }
 
-    public Map<String, Double> movieRevenue(){
-                movieBookingValue =  dataStorage.allMovieBooking().stream()
-                .collect(Collectors.toMap(
-                         moviebooked -> moviebooked.getMovieName(),
-                        moviebooked -> moviebooked.getTotalPrice() + moviebooked.getTotalTax(), Double::sum
-                ));
-                return  movieBookingValue;
-    }
+   public  void report(List<MovieBooking> bookings){
 
-    public double totalRevenue(){
-        for (Double mapElement : movieBookingValue.values())
-            myTotalRevenue += mapElement;
-        return myTotalRevenue;
-    }
+   }
 
-    public void highestRevenue() {
-        Optional<Map.Entry<String, Double>> maxEntry = movieBookingValue.entrySet().stream()
-                .max(Map.Entry.comparingByValue());
-
-        if (maxEntry.isPresent()) {
-            log.info("Movie that has got the highest revenue (including tax) in a single booking: {}", maxEntry.get().getKey());
+   public void generateRevenueReport(List<MovieBooking> bookings) {
+        if (bookings.isEmpty()){
+            log.info("no bookings available.");
+            return;
         }
-    }
 
-    public void eachMovie(){
-        dataStorage.allMovieBooking().stream()
-                .forEach(movie -> {
+        double totalRevenueAllMovies = 0.0;
+        MovieBooking highestRevenueBooking = null;
 
-                });
-    }
+        Map<String, List<MovieBooking>> movieBookingMap = new HashMap<>();
+
+        for (MovieBooking booking : bookings) {
+            String movieName = booking.getMovieName();
+            double currentBookingRevenue = booking.getTotalPrice() + booking.getTotalTax();
+            totalRevenueAllMovies += currentBookingRevenue;
+
+            if (highestRevenueBooking == null || currentBookingRevenue > (highestRevenueBooking.getTotalPrice() + highestRevenueBooking.getTotalTax())){
+                highestRevenueBooking = booking;
+            }
+
+            if (!movieBookingMap.containsKey(movieName)) {
+                movieBookingMap.put(movieName, new ArrayList<>());
+            }
+            movieBookingMap.get(movieName).add(booking);
+        }
+
+       System.out.println("🎟️ Total Revenue (including tax) Across All Movies: £" + totalRevenueAllMovies);
+
+       if (highestRevenueBooking != null) {
+           System.out.println("\n💰 Movie with the Highest Revenue (Single Booking):");
+           System.out.println("Movie: " + highestRevenueBooking.getMovieName());
+           System.out.println("Revenue: £" + (highestRevenueBooking.getTotalPrice() + highestRevenueBooking.getTotalTax()));
+       }
+
+       for (Map.Entry<String, List<MovieBooking>> entry : movieBookingMap.entrySet()){
+           String movieName = entry.getKey();
+           List<MovieBooking> movieBookings = entry.getValue();
+
+           double totalMovieRevenue = movieBookings.stream()
+                   .mapToDouble(movie -> movie.getTotalPrice() + movie.getTotalTax())
+                   .sum();
+
+           System.out.println("\n🎬 Movie: " + movieName);
+           System.out.println("Total Revenue: £" + totalMovieRevenue);
+           System.out.println("Bookings:");
+           System.out.println("Datetime | Seats | Revenue (inc. tax)");
+
+           for (MovieBooking movie : movieBookings) {
+               double revenue = movie.getTotalPrice() + movie.getTotalTax();
+               System.out.println(movie.getDateTime() + " | " + movie.getNumberOfSeats() + " | £" + revenue);
+           }
+
+       }
+
+
+
+   }
 
 }
