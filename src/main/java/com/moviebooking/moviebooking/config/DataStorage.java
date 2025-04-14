@@ -51,9 +51,12 @@ public class DataStorage {
          return  movieDb.values().stream().toList();
     }
 
-    public List<MovieBooking> allMovieBooking (){
+    public List<MovieBooking> allMovieBooking(){
         return  bookings;
     }
 
+    public void deleteMovieBooking(MovieBooking booking){
+        bookings.remove(booking);
 
+    }
 }

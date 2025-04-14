@@ -15,7 +15,7 @@ condition - data storage class must load the movie into memory at application st
 - create a moviebookingController REST class that will contain the movie booking rest api
 - create class movieBookingRequest that contains the movie booking request data
 - create a class movieBookingResponse  that contains the movie booking response
-- create a movieReportJob class to perform the reporting
+- create a MovieReportJob class to perform the reporting
 
 - create a bookingException, bookingExceptionDetail and bookingExceptionHandler class  
 

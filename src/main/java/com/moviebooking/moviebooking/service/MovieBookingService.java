@@ -1,6 +1,7 @@
 package com.moviebooking.moviebooking.service;
 import com.moviebooking.moviebooking.config.DataStorage;
 import com.moviebooking.moviebooking.exception.model.BookingException;
+import com.moviebooking.moviebooking.exception.model.DeleteBookingException;
 import com.moviebooking.moviebooking.model.Movie;
 import com.moviebooking.moviebooking.model.MovieBooking;
 import com.moviebooking.moviebooking.request.BookingRequest;
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+
 
 @Slf4j
 @Service
@@ -60,71 +62,23 @@ public class MovieBookingService {
         return  new BookingResponse(booking.getNumberOfSeats() + " Number of seat are booked for " + booking.getMovieName());
     }
 
-    public List<MovieBooking> getAllBookings(){
+    public List<MovieBooking> allMovieBooking(){
 
         return dataStorage.allMovieBooking();
     }
 
-   public  void report(List<MovieBooking> bookings){
+    public List<Movie> findAllTheMovie(){
+        return dataStorage.findAllMovie();
+    }
 
-   }
-
-   public void generateRevenueReport(List<MovieBooking> bookings) {
-        if (bookings.isEmpty()){
-            log.info("no bookings available.");
-            return;
+    public void deleteMovieBooking(MovieBooking booking) throws DeleteBookingException {
+        List <MovieBooking> bookings = dataStorage.allMovieBooking();
+        if(bookings == null || bookings.isEmpty()){
+            throw  new DeleteBookingException("Booking list is empty", HttpStatus.BAD_REQUEST.value());
         }
-
-        double totalRevenueAllMovies = 0.0;
-        MovieBooking highestRevenueBooking = null;
-
-        Map<String, List<MovieBooking>> movieBookingMap = new HashMap<>();
-
-        for (MovieBooking booking : bookings) {
-            String movieName = booking.getMovieName();
-            double currentBookingRevenue = booking.getTotalPrice() + booking.getTotalTax();
-            totalRevenueAllMovies += currentBookingRevenue;
-
-            if (highestRevenueBooking == null || currentBookingRevenue > (highestRevenueBooking.getTotalPrice() + highestRevenueBooking.getTotalTax())){
-                highestRevenueBooking = booking;
-            }
-
-            if (!movieBookingMap.containsKey(movieName)) {
-                movieBookingMap.put(movieName, new ArrayList<>());
-            }
-            movieBookingMap.get(movieName).add(booking);
-        }
-
-       System.out.println("🎟️ Total Revenue (including tax) Across All Movies: £" + totalRevenueAllMovies);
-
-       if (highestRevenueBooking != null) {
-           System.out.println("\n💰 Movie with the Highest Revenue (Single Booking):");
-           System.out.println("Movie: " + highestRevenueBooking.getMovieName());
-           System.out.println("Revenue: £" + (highestRevenueBooking.getTotalPrice() + highestRevenueBooking.getTotalTax()));
-       }
-
-       for (Map.Entry<String, List<MovieBooking>> entry : movieBookingMap.entrySet()){
-           String movieName = entry.getKey();
-           List<MovieBooking> movieBookings = entry.getValue();
-
-           double totalMovieRevenue = movieBookings.stream()
-                   .mapToDouble(movie -> movie.getTotalPrice() + movie.getTotalTax())
-                   .sum();
-
-           System.out.println("\n🎬 Movie: " + movieName);
-           System.out.println("Total Revenue: £" + totalMovieRevenue);
-           System.out.println("Bookings:");
-           System.out.println("Datetime | Seats | Revenue (inc. tax)");
-
-           for (MovieBooking movie : movieBookings) {
-               double revenue = movie.getTotalPrice() + movie.getTotalTax();
-               System.out.println(movie.getDateTime() + " | " + movie.getNumberOfSeats() + " | £" + revenue);
-           }
-
-       }
-
-
-
-   }
+               boolean removed =  bookings.removeIf(existingMovie -> existingMovie.getMovieName()
+                                .equalsIgnoreCase(booking.getMovieName()) && existingMovie.getDateTime()
+                                        .isEqual(booking.getDateTime()) && existingMovie.getNumberOfSeats().equals(booking.getNumberOfSeats()));
+    }
 
 }

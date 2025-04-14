@@ -23,7 +23,7 @@ public class MovieBookingController {
 
     @GetMapping("/all-movies")
     public List<MovieBooking> getAllBookings(){
-        return movieBookingService.getAllBookings();
+        return movieBookingService.allMovieBooking();
     }
 
 
