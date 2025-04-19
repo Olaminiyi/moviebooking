@@ -59,7 +59,7 @@ public class MovieBookingService {
 
         dataStorage.addMovieBooking(booking);
 
-        return  new BookingResponse(booking.getNumberOfSeats() + " Number of seat are booked for " + booking.getMovieName());
+        return  new BookingResponse(booking.getMovieName(), booking.getNumberOfSeats(), booking.getTotalPrice(), booking.getTotalTax(),"movie booked");
     }
 
     public List<MovieBooking> allMovieBooking(){
@@ -71,31 +71,73 @@ public class MovieBookingService {
         return dataStorage.findAllMovie();
     }
 
-    public void updateBooking(List<MovieBooking> bookings, String movieName, LocalDateTime originalDateTime, LocalDateTime newTimeDate, AtomicInteger seatNumber ){
-        if(bookings.isEmpty()){
+    public BookingResponse updateBooking(String movieName, LocalDateTime originalDateTime, BookingRequest bookingRequest){
+        List <MovieBooking> bookings = dataStorage.allMovieBooking();
+        Movie movie = dataStorage.findMovie(movieName);
+
+        if(bookings == null || bookings.isEmpty() || movie == null ){
             throw  new BookingException("No booking found", HttpStatus.BAD_REQUEST.value());
         }
+
+        MovieBooking existingMovieBooking = null;
         for(int i = 0; i < bookings.size(); i++){
-            if(bookings.get(i).getMovieName().equalsIgnoreCase(movieName) && bookings.get(i).getDateTime().isEqual(originalDateTime)){
-                bookings.get(i).setNumberOfSeats(seatNumber);
-                bookings.get(i).setDateTime(newTimeDate);
+            if(bookings.get(i).getMovieName().equalsIgnoreCase(movie.getMovieName()) && bookings.get(i).getDateTime().isEqual(originalDateTime)){
+                existingMovieBooking = bookings.get(i);
                 break;
             }
         }
-    }
 
-    public void deleteMovieBooking(MovieBooking booking) throws DeleteBookingException {
-        List <MovieBooking> bookings = dataStorage.allMovieBooking();
-        if(bookings == null || bookings.isEmpty()){
-            throw  new DeleteBookingException("Booking list is empty", HttpStatus.BAD_REQUEST.value());
+        if(existingMovieBooking == null){
+            throw new BookingException("Matching booking not found", HttpStatus.BAD_REQUEST.value());
         }
-               boolean removed =  bookings.removeIf(existingMovie -> existingMovie.getMovieName()
-                                .equalsIgnoreCase(booking.getMovieName()) && existingMovie.getDateTime()
-                                        .isEqual(booking.getDateTime()) && existingMovie.getNumberOfSeats().equals(booking.getNumberOfSeats()));
+
+        if(bookingRequest.getNumberOfSeat() > movie.getAvailableSeats().get() ){
+            throw new BookingException("The number of seat requested is more than seat availabe", HttpStatus.BAD_REQUEST.value());
+        }
+
+        double totalPrice = bookingRequest.getNumberOfSeat() * movie.getPricePerSeat();
+        double totalTax = totalPrice * (movie.getTaxPercentagePerSeat()/100.0);
+
+        movie.getAvailableSeats().addAndGet(-bookingRequest.getNumberOfSeat());
+
+        MovieBooking updatedBooking = MovieBooking.builder()
+                .movieName(bookingRequest.getMovieName())
+                .numberOfSeats(new AtomicInteger(bookingRequest.getNumberOfSeat()))
+                .totalTax(totalPrice)
+                .dateTime(LocalDateTime.now())
+                .totalTax(totalTax)
+                .build();
+
+        dataStorage.deleteMovieBooking(existingMovieBooking);
+        dataStorage.addMovieBooking(updatedBooking);
+        return new BookingResponse(updatedBooking.getMovieName(), updatedBooking.getNumberOfSeats(), updatedBooking.getTotalPrice(),
+                updatedBooking.getTotalTax(), "booking updated");
     }
 
+    public BookingResponse deleteMovieBooking(String movieName, LocalDateTime originalDateTime) throws DeleteBookingException {
+        List<MovieBooking> bookings = dataStorage.allMovieBooking();
+        Movie movie = dataStorage.findMovie(movieName);
 
-    public void generateReport() {
+        if (bookings == null || bookings.isEmpty() || movie == null) {
+            throw new BookingException("No booking found", HttpStatus.BAD_REQUEST.value());
+        }
+
+        MovieBooking existingMovieBooking = null;
+        for (int i = 0; i < bookings.size(); i++) {
+            if (bookings.get(i).getMovieName().equalsIgnoreCase(movie.getMovieName()) && bookings.get(i).getDateTime().isEqual(originalDateTime)) {
+                existingMovieBooking = bookings.get(i);
+                break;
+            }
+        }
+
+        if (existingMovieBooking == null) {
+            throw new BookingException("Matching booking not found", HttpStatus.BAD_REQUEST.value());
+        }
+        dataStorage.deleteMovieBooking(existingMovieBooking);
+        return  new BookingResponse("Booking successfully deleted");
+    }
+
+        public void generateReport() {
         List<MovieBooking> bookings = dataStorage.allMovieBooking();
 
         if (bookings.isEmpty()){
@@ -148,10 +190,6 @@ public class MovieBookingService {
                 double revenue = movie.getTotalPrice() + movie.getTotalTax();
                 System.out.println(movie.getDateTime() + " | " + movie.getNumberOfSeats() + " | £" + revenue);
             }
-
         }
-
-
-
     }
 }
