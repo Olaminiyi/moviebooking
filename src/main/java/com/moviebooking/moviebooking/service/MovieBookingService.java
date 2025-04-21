@@ -76,7 +76,7 @@ public class MovieBookingService {
         Movie movie = dataStorage.findMovie(movieName);
 
         if(bookings == null || bookings.isEmpty() || movie == null ){
-            throw  new BookingException("No booking found", HttpStatus.BAD_REQUEST.value());
+            throw  new BookingException("search not successful", HttpStatus.BAD_REQUEST.value());
         }
 
         MovieBooking existingMovieBooking = null;
@@ -92,7 +92,7 @@ public class MovieBookingService {
         }
 
         if(bookingRequest.getNumberOfSeat() > movie.getAvailableSeats().get() ){
-            throw new BookingException("The number of seat requested is more than seat availabe", HttpStatus.BAD_REQUEST.value());
+            throw new BookingException("The number of seat requested is more than seat available", HttpStatus.BAD_REQUEST.value());
         }
 
         double totalPrice = bookingRequest.getNumberOfSeat() * movie.getPricePerSeat();
