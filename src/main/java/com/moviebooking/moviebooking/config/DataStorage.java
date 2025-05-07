@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @ApplicationScope
 @Configuration
@@ -37,6 +38,16 @@ public class DataStorage {
         catch (Exception e){
             log.info("");
         }
+    }
+
+    public void addMovie(String movieName, AtomicInteger availableSeats,double pricePerSeat, double taxPercentagePerSeat ){
+            Movie newMovie = Movie.builder()
+                    .movieName(movieName)
+                    .availableSeats(availableSeats)
+                    .pricePerSeat(pricePerSeat)
+                    .taxPercentagePerSeat(taxPercentagePerSeat)
+                    .build();
+            movieDb.put(newMovie.getMovieName(), newMovie);
     }
 
     public Movie findMovie(String movieName){

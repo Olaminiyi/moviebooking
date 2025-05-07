@@ -137,6 +137,10 @@ public class MovieBookingService {
         return  new BookingResponse("Booking successfully deleted");
     }
 
+    public void addMovie(String movieName, AtomicInteger availableSeats, double pricePerSeat, double taxPercentagePerSeat){
+        dataStorage.addMovie(movieName, availableSeats, pricePerSeat, taxPercentagePerSeat);
+    }
+
         public void generateReport() {
         List<MovieBooking> bookings = dataStorage.allMovieBooking();
 

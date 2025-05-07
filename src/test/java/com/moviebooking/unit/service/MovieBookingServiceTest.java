@@ -1,4 +1,4 @@
-package com.moviebooking.moviebooking.unit.service;
+package com.moviebooking.unit.service;
 
 import com.moviebooking.moviebooking.config.DataStorage;
 import com.moviebooking.moviebooking.exception.model.BookingException;
@@ -6,15 +6,12 @@ import com.moviebooking.moviebooking.model.Movie;
 import com.moviebooking.moviebooking.request.BookingRequest;
 import com.moviebooking.moviebooking.response.BookingResponse;
 import com.moviebooking.moviebooking.service.MovieBookingService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
