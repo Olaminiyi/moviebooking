@@ -99,12 +99,14 @@ public class MovieBookingServiceTest {
         Movie movie = Movie.builder()
                 .movieName("Alakada")
                 .availableSeats(new AtomicInteger(7))
-                .pricePerSeat(20.0)
-                .taxPercentagePerSeat(5.0)
+                .pricePerSeat(5.0)
+                .taxPercentagePerSeat(2.0)
                 .build();
 
         when(dataStorage.findMovie("Alakada")).thenReturn(movie);
         BookingResponse response = movieBookingService.bookSeat(request);
         assertEquals("movie booked", response.getMessage());
+        assertEquals(20, response.getTotalPrice());
+        assertEquals(0.4, response.getTotalTax());
     }
 }

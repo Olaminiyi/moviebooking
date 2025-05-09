@@ -22,6 +22,11 @@ public class MovieBookingController {
 
     private MovieBookingService movieBookingService;
 
+    @GetMapping("/")
+    public String home() {
+        return "Movie Booking App is running!";
+    }
+
     @PostMapping("/book-seats")
     public ResponseEntity<BookingResponse> bookSeats(@RequestBody BookingRequest bookingRequest) {
        try {
