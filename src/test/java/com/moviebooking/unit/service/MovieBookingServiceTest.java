@@ -12,6 +12,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -28,6 +29,12 @@ public class MovieBookingServiceTest {
     @Mock
     private DataStorage dataStorage;
 
+    @Test
+    void findAllMovie(){
+      Movie movie =  dataStorage.addMovie("Joy",new AtomicInteger(5), 7, 5);
+        lenient().when(dataStorage.findAllMovie()).thenReturn((List<Movie>) movie);
+
+    }
 
 
     @Test

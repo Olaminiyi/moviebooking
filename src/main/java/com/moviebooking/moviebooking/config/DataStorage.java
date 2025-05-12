@@ -40,7 +40,7 @@ public class DataStorage {
         }
     }
 
-    public void addMovie(String movieName, AtomicInteger availableSeats,double pricePerSeat, double taxPercentagePerSeat ){
+    public Movie addMovie(String movieName, AtomicInteger availableSeats,double pricePerSeat, double taxPercentagePerSeat ){
             Movie newMovie = Movie.builder()
                     .movieName(movieName)
                     .availableSeats(availableSeats)
@@ -48,6 +48,7 @@ public class DataStorage {
                     .taxPercentagePerSeat(taxPercentagePerSeat)
                     .build();
             movieDb.put(newMovie.getMovieName(), newMovie);
+            return newMovie;
     }
 
     public Movie findMovie(String movieName){

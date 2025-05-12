@@ -67,13 +67,17 @@ public class MovieBookingService {
         return dataStorage.allMovieBooking();
     }
 
-    public List<Movie> findAllTheMovie(){
-        return dataStorage.findAllMovie();
-    }
+//    public BookingResponse findAllTheMovie(){
+//        List<Movie> myMovie = dataStorage.findAllMovie();
+//        if (myMovie.isEmpty()){
+//            throw new BookingException("No movie found", HttpStatus.BAD_REQUEST.value());
+//        }
+//        return  new BookingResponse()
+//    }
 
-    public BookingResponse updateBooking(String movieName, LocalDateTime originalDateTime, BookingRequest bookingRequest){
+    public BookingResponse updateBooking(String oldMovieName, LocalDateTime oldDateTime, BookingRequest bookingRequest){
         List <MovieBooking> bookings = dataStorage.allMovieBooking();
-        Movie movie = dataStorage.findMovie(movieName);
+        Movie movie = dataStorage.findMovie(oldMovieName);
 
         if(bookings == null || bookings.isEmpty() || movie == null ){
             throw  new BookingException("search not successful", HttpStatus.BAD_REQUEST.value());
@@ -81,7 +85,7 @@ public class MovieBookingService {
 
         MovieBooking existingMovieBooking = null;
         for(int i = 0; i < bookings.size(); i++){
-            if(bookings.get(i).getMovieName().equalsIgnoreCase(movie.getMovieName()) && bookings.get(i).getDateTime().isEqual(originalDateTime)){
+            if(bookings.get(i).getMovieName().equalsIgnoreCase(movie.getMovieName()) && bookings.get(i).getDateTime().isEqual(oldDateTime)){
                 existingMovieBooking = bookings.get(i);
                 break;
             }

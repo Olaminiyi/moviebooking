@@ -50,10 +50,10 @@ public class MovieBookingController {
     }
 
     @PutMapping("/update-moviebooking")
-    public ResponseEntity<BookingResponse> updateBooking(@RequestParam  String movieName, LocalDateTime originalDateTime,
+    public ResponseEntity<BookingResponse> updateBooking(@RequestParam  String oldMovieName, LocalDateTime oldDateTime,
                                                        @RequestBody  BookingRequest bookingRequest) {
         try {
-            BookingResponse bookingResponse = movieBookingService.updateBooking(movieName, originalDateTime, bookingRequest);
+            BookingResponse bookingResponse = movieBookingService.updateBooking(oldMovieName, oldDateTime, bookingRequest);
             return ResponseEntity.ok(bookingResponse);
         }catch (BookingException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
