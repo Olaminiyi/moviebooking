@@ -16,18 +16,13 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @RestController
-@RequestMapping("api/v1/seat-booking")
+@RequestMapping("seat-bookings")
 @AllArgsConstructor
 public class MovieBookingController {
 
     private MovieBookingService movieBookingService;
 
-    @GetMapping("/")
-    public String home() {
-        return "Movie Booking App is running!";
-    }
-
-    @PostMapping("/book-seats")
+    @PostMapping
     public ResponseEntity<BookingResponse> bookSeats(@RequestBody BookingRequest bookingRequest) {
        try {
            BookingResponse bookingResponse  = movieBookingService.bookSeat(bookingRequest);
@@ -44,12 +39,12 @@ public class MovieBookingController {
        }
     }
 
-    @GetMapping("/all-moviebookings")
+    @GetMapping
     public List<MovieBooking> getAllBookings() {
         return movieBookingService.allMovieBooking();
     }
 
-    @PutMapping("/update-moviebooking")
+    @PutMapping
     public ResponseEntity<BookingResponse> updateBooking(@RequestParam  String oldMovieName, LocalDateTime oldDateTime,
                                                        @RequestBody  BookingRequest bookingRequest) {
         try {
@@ -68,6 +63,7 @@ public class MovieBookingController {
         }
     }
 
+    @DeleteMapping
     public ResponseEntity<BookingResponse> deleteMovieBooking(@RequestParam String movieName, LocalDateTime originalDateTime) throws DeleteBookingException {
         try{
             BookingResponse bookingResponse = movieBookingService.deleteMovieBooking(movieName, originalDateTime);

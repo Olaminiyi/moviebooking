@@ -94,6 +94,7 @@ public class MovieBookingService {
         if(existingMovieBooking == null){
             throw new BookingException("Matching booking not found", HttpStatus.BAD_REQUEST.value());
         }
+        movie.getAvailableSeats().addAndGet(existingMovieBooking.getNumberOfSeats().get());
 
         if(bookingRequest.getNumberOfSeat() > movie.getAvailableSeats().get() ){
             throw new BookingException("The number of seat requested is more than seat available", HttpStatus.BAD_REQUEST.value());
