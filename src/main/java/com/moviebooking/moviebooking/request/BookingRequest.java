@@ -12,6 +12,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class BookingRequest {
+
+   // @NotBlank(message ="must not be blank")
     private String movieName;
     private int numberOfSeat;
 

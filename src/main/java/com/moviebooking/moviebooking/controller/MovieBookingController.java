@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @RestController
-@RequestMapping("seat-bookings")
+@RequestMapping("/api/v1/seat-bookings")
 @AllArgsConstructor
 public class MovieBookingController {
 

@@ -89,7 +89,6 @@
             <groupId>com.moviebooking</groupId>
             <artifactId>moviebooking</artifactId>
             <version>0.0.1-SNAPSHOT</version>
-            <scope>test</scope>
         </dependency>
 		<dependency>
 			<groupId>org.junit.platform</groupId>
