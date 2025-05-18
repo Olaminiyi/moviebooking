@@ -3,7 +3,7 @@ A Spring-Boot App to book a movie and run a report.
 
 Features
 1. Create a movie database
-2. Book a seat.
+2. Book a seat
 
 Installation
 1. Pull moviebooking from Git. git clone 
