@@ -67,14 +67,6 @@ public class MovieBookingService {
         return dataStorage.allMovieBooking();
     }
 
-//    public BookingResponse findAllTheMovie(){
-//        List<Movie> myMovie = dataStorage.findAllMovie();
-//        if (myMovie.isEmpty()){
-//            throw new BookingException("No movie found", HttpStatus.BAD_REQUEST.value());
-//        }
-//        return  new BookingResponse()
-//    }
-
     public BookingResponse updateBooking(String oldMovieName, LocalDateTime oldDateTime, BookingRequest bookingRequest){
         List <MovieBooking> bookings = dataStorage.allMovieBooking();
         Movie movie = dataStorage.findMovie(oldMovieName);
