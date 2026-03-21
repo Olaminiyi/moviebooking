@@ -1,5 +1,4 @@
 package com.moviebooking.moviebooking.controller;
-
 import com.moviebooking.moviebooking.exception.model.BookingException;
 import com.moviebooking.moviebooking.exception.model.DeleteBookingException;
 import com.moviebooking.moviebooking.model.MovieBooking;
