@@ -5,7 +5,6 @@ import com.moviebooking.moviebooking.model.MovieBooking;
 import com.moviebooking.moviebooking.request.BookingRequest;
 import com.moviebooking.moviebooking.response.BookingResponse;
 import com.moviebooking.moviebooking.service.MovieBookingService;
-
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
